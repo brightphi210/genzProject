@@ -1,7 +1,7 @@
 {
     "builds": [
         {
-            "src": "GenZ/wsgi.py",
+            "src": "genzProject/wsgi.py",
             "use": "@vercel/python",
             "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
          },
@@ -22,7 +22,7 @@
           },
         {
             "src": "/(.*)",
-            "dest": "GenZ/wsgi.py"
+            "dest": "genzProject/wsgi.py"
         }
     ]
 }
