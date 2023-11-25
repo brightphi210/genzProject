@@ -24,13 +24,19 @@ from rest_framework.permissions import IsAuthenticated
 def enpoint(request):
     data = {
         "Enpoint" : "Api/",
+        "Login" : "api/token",
         "Getting User" : "api/user",
         "Get, Update, Delete User" : "api/user/id",
         "Get and Update User Profile" : "api/userprofile/update",
 
-        # ===================== NEWS ========================
+        # '===================== NEWS ======================== 
+
         "Get and Create News" : "api/news",
         "Get and Create NewsLetter" : "api/newsLetter",
+
+        # '===================== STORY ======================== 
+        'Get and Create Stories' : "api/stories",
+        'Get and Create MagazineStories' : "api/magazineStories",
 
 
         # ===================== SUB ===============================
@@ -48,8 +54,22 @@ class UserGetCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
+        email = request.data.get('email', None)
+
+        # Check if a user with the given email already exists
+        if email and User.objects.filter(email=email).exists():
+            return Response({'message': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
         response = super().create(request, *args, **kwargs)
-        return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        
+        # Check if the creation was successful
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        else:
+            # Registration failed, customize the error message
+            error_message = {'message': 'User registration failed. Please check the provided data.'}
+            response.data = error_message
+            return response
 
 
 class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
@@ -80,11 +100,22 @@ class MagazineGet(generics.ListAPIView):
 
 
 class NewsGet(generics.ListCreateAPIView):
-
     queryset = News.objects.all()
     serializer_class = NewSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'intro', 'body']
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        
+        # Check if the creation was successful
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'News created successfully'}, status=status.HTTP_201_CREATED)
+        else:
+            # Creation failed, customize the error message
+            error_message = {'message': 'News creation failed. Please check the provided data.'}
+            response.data = error_message
+            return response
 
 
 class StoryGet(generics.ListCreateAPIView):
@@ -94,11 +125,56 @@ class StoryGet(generics.ListCreateAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', 'intro', 'body']
 
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        
+        # Check if the creation was successful
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'Story created successfully'}, status=status.HTTP_201_CREATED)
+        else:
+            # Creation failed, customize the error message
+            error_message = {'message': 'Story creation failed. Please check the provided data.'}
+            response.data = error_message
+            return response
+        
+
+
+class MagazineStoryGet(generics.ListCreateAPIView):
+
+    queryset = MagazineStories.objects.all()
+    serializer_class = MagazineStorySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['title', 'intro', 'body']
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        
+        # Check if the creation was successful
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'Magazine Story created successfully'}, status=status.HTTP_201_CREATED)
+        else:
+            # Creation failed, customize the error message
+            error_message = {'message': 'Magaznie Story creation failed. Please check the provided data.'}
+            response.data = error_message
+            return response
+
 
 
 class NewsLetterView(generics.ListCreateAPIView):
     queryset = NewsLetter.objects.all()
     serializer_class = NewsLetterSerializer
+
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+        
+        # Check if the creation was successful
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'Subcription successfull'}, status=status.HTTP_201_CREATED)
+        else:
+            # Creation failed, customize the error message
+            error_message = {'message': 'Subsription creation failed. Please check the provided data.'}
+            response.data = error_message
+            return response
 
 
 

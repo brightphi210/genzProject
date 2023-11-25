@@ -18,6 +18,7 @@ urlpatterns = [
     
     path('api/news', views.NewsGet.as_view(), name="news"),
     path('api/stories', views.StoryGet.as_view(), name="stories"),
+    path('api/magazineStories', views.MagazineStoryGet.as_view(), name="stories"),
 
 
     # ======================== subsribe =================================

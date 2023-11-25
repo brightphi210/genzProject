@@ -39,20 +39,25 @@ class NewSerializer(ModelSerializer):
     class Meta:
         model = News
         fields = '__all__'
-        depth = 1
+        # depth = 1
+
 
 class StorySerializer(ModelSerializer):
     class Meta:
         model = Stories
         fields = '__all__'
-        depth = 1
+        # depth = 1
 
+class MagazineStorySerializer(ModelSerializer):
+    class Meta:
+        model = MagazineStories
+        fields = '__all__'
 
 class NewsLetterSerializer(ModelSerializer):
     class Meta:
         model = NewsLetter
         fields = ['id', 'email', 'subscribed', 'subscribed_date']
-        depth = 1
+        # depth = 1
 
 
 # =================== Subscriptio ================================

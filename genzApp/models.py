@@ -138,6 +138,20 @@ class Stories(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class MagazineStories(models.Model):
+    
+    author = models.ForeignKey(Authors, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    title = models.CharField(max_length=225, blank=True, null=True)
+    intro = models.TextField()
+    body = models.TextField(blank=True, null=True)
+    date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
     
 
 class NewsLetter(models.Model):
@@ -147,6 +161,7 @@ class NewsLetter(models.Model):
 
     def __str__(self):
         return f"Subcrition for {self.user.email}"
+    
 
 
 
