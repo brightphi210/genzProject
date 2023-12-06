@@ -44,6 +44,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(null=True, blank=True)
 
+    is_author = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    is_user = models.BooleanField(default=False)
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
@@ -77,22 +81,29 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.email
+    
+
+
+
+
+# ====================== Admin ============================
+
+class AdminProfile(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True)
+    profile_pic = models.ImageField(
+        upload_to='profile_pics/', default='default.png', blank=True, null=True)
+
+    def __str__(self):
+        return self.user.email
+
 
 
 # ====================== Authors ============================
-class Authors(models.Model):
-    name = models.CharField(max_length=255, blank=True, null=True)
-    email = models.EmailField(max_length=255, unique=True)
-    username = models.CharField(
-        max_length=255, unique=True, blank=True, null=True)
-
-
-    def __str__(self):
-        return self.name
     
 class AuthorsProfile(models.Model):
     author = models.ForeignKey(
-        Authors, on_delete=models.CASCADE, null=True, blank=True)
+        User, on_delete=models.CASCADE, null=True, blank=True)
     profile_pic = models.ImageField(
         upload_to='profile_pics/', default='default.png', blank=True, null=True)
     
@@ -114,7 +125,7 @@ class Category(models.Model):
 
 class News(models.Model):
     
-    author = models.ForeignKey(Authors, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     title = models.CharField(max_length=225, blank=True, null=True)
@@ -128,7 +139,7 @@ class News(models.Model):
 
 class Stories(models.Model):
     
-    author = models.ForeignKey(Authors, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     title = models.CharField(max_length=225, blank=True, null=True)
@@ -142,7 +153,7 @@ class Stories(models.Model):
 
 class MagazineStories(models.Model):
     
-    author = models.ForeignKey(Authors, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
     title = models.CharField(max_length=225, blank=True, null=True)
@@ -171,7 +182,6 @@ class SubscriptionPlan(models.Model):
         ('MONTHLY', 'MONTHLY'),
         ('A YEAR', 'A YEAR'),
         ('A YEAR WITH PRINT', 'A YEAR WITH PRINT'),
-        # Add more category choices as needed
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)

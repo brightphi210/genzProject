@@ -1,12 +1,16 @@
 
 from .models import *
 from rest_framework.serializers import ModelSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+
 
 
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'password', 'terms']
+        fields = ['id', 'name', 'email', 'password', 'terms', 'is_user']
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -14,12 +18,20 @@ class UserSerializer(ModelSerializer):
         user.set_password(password)
         user.save()
         return user
-        # extra_kwargs = {'password': {'write_only': True}}
+    
 
-class AuthorSerializer(ModelSerializer):
-    class Meta:
-        model = Authors
-        fields = '__all__'
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token["is_user"] = user.is_user
+        token["is_admin"] = user.is_admin
+        token["is_author"] = user.is_author
+
+        return token
+
+
 
 class UserProfileSerializer(ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -27,6 +39,70 @@ class UserProfileSerializer(ModelSerializer):
     class Meta:
         model = UserProfile
         fields = '__all__'
+
+
+
+class AuthorSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'password', 'is_author']
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+    
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token["is_user"] = user.is_user
+        token["is_admin"] = user.is_admin
+        token["is_author"] = user.is_author
+
+        return token
+
+
+class AuthorsProfileSerializer(ModelSerializer):
+    class Meta:
+        model = AuthorsProfile
+        fields = '__all__'
+
+
+
+class AdminSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'name', 'email', 'password', 'is_admin']
+
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        user = User(**validated_data)
+        user.set_password(password)
+        user.save()
+        return user
+    
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        token["is_user"] = user.is_user
+        token["is_admin"] = user.is_admin
+        token["is_author"] = user.is_author
+
+        return token
+
+class AdminProfileSerializer(ModelSerializer):
+    class Meta:
+        model = AdminProfile
+        fields = '__all__'
+
 
 
 class CategorySerializer(ModelSerializer):

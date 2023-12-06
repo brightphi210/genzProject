@@ -16,6 +16,7 @@ from .serializer import *
 from rest_framework.response import Response
 from .models import *
 
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -25,9 +26,16 @@ def enpoint(request):
     data = {
         "Enpoint" : "Api/",
         "Login" : "api/token",
+
+
         "Getting User" : "api/user",
         "Get, Update, Delete User" : "api/user/id",
         "Get and Update User Profile" : "api/userprofile/update",
+
+
+        "Getting User" : "api/author",
+        "Get, Update, Delete User" : "api/author/id",
+        "Get and Update User Profile" : "api/authorprofile/update",
 
         # '===================== NEWS ======================== 
 
@@ -54,6 +62,8 @@ class UserGetCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
+        request.data._mutable = True
+        request.data['is_user'] = True
         email = request.data.get('email', None)
 
         # Check if a user with the given email already exists
@@ -87,6 +97,110 @@ class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
 class UserProfileGetUpdate(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    lookup_field = 'pk'
+
+    def user_update(self, serializer):
+        instance = serializer.save()
+
+
+
+
+
+# ========================= Authors ===========================
+class AuthorGetCreate(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = AuthorSerializer
+
+    def create(self, request, *args, **kwargs):
+        request.data._mutable = True
+        request.data['is_author'] = True
+
+        email = request.data.get('email', None)
+
+        # Check if a user with the given email already exists
+        if email and User.objects.filter(email=email).exists():
+            return Response({'message': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+        response = super().create(request, *args, **kwargs)
+        
+        # Check if the creation was successful
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        else:
+            # Registration failed, customize the error message
+            error_message = {'message': 'User registration failed. Please check the provided data.'}
+            response.data = error_message
+            return response
+
+
+class AuthorGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = AuthorSerializer
+    lookup_field = 'pk'
+
+    def users_update(self, serializer):
+        instance = serializer.save()
+
+
+    def users_destroy(self, instance):
+        return super().perform_destroy(instance)
+
+class AuthorProfileGetUpdate(generics.RetrieveUpdateAPIView):
+    queryset = AuthorsProfile.objects.all()
+    serializer_class = AuthorsProfileSerializer 
+    lookup_field = 'pk'
+
+    def user_update(self, serializer):
+        instance = serializer.save()
+
+
+
+
+
+
+
+# ========================= Admin ===========================
+class AdminGetCreate(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = AdminSerializer
+
+    def create(self, request, *args, **kwargs):
+        request.data._mutable = True
+        request.data['is_admin'] = True
+
+        email = request.data.get('email', None)
+
+        # Check if a user with the given email already exists
+        if email and User.objects.filter(email=email).exists():
+            return Response({'message': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+        response = super().create(request, *args, **kwargs)
+        
+        # Check if the creation was successful
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+        else:
+            # Registration failed, customize the error message
+            error_message = {'message': 'User registration failed. Please check the provided data.'}
+            response.data = error_message
+            return response
+
+
+class AdminGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = AdminSerializer
+    lookup_field = 'pk'
+
+    def users_update(self, serializer):
+        instance = serializer.save()
+
+
+    def users_destroy(self, instance):
+        return super().perform_destroy(instance)
+
+class AdminProfileGetUpdate(generics.RetrieveUpdateAPIView):
+    queryset = AuthorsProfile.objects.all()
+    serializer_class = AdminProfileSerializer 
     lookup_field = 'pk'
 
     def user_update(self, serializer):
@@ -190,3 +304,10 @@ class PremiumSubscriptionPlanViewSet(generics.ListCreateAPIView):
     queryset = SubscriptionPlan.objects.filter(category='Premium')
     serializer_class = SubscriptionPlanSerializer
 
+
+
+
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
