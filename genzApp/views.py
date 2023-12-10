@@ -30,12 +30,12 @@ def enpoint(request):
 
         "Getting User" : "api/user",
         "Get, Update, Delete User" : "api/user/id",
-        "Get and Update User Profile" : "api/userprofile/update",
+        "Get and Update User Profile" : "api/userprofile/update/id",
 
 
         "Getting Author" : "api/author",
         "Get, Update, Delete Author" : "api/author/id",
-        "Get and Update Author Profile" : "api/authorprofile/update",
+        "Get and Update Author Profile" : "api/authorprofile/update/id",
 
         # '===================== NEWS ======================== 
 
@@ -62,7 +62,7 @@ class UserGetCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data._mutable = True
+        # request.data._mutable = True
         request.data['is_user'] = True
         email = request.data.get('email', None)
 
@@ -113,7 +113,7 @@ class AuthorGetCreate(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data._mutable = True
+        # request.data._mutable = True
         request.data['is_author'] = True
 
         email = request.data.get('email', None)
@@ -166,7 +166,7 @@ class AdminGetCreate(generics.ListCreateAPIView):
     serializer_class = AdminSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data._mutable = True
+        # request.data._mutable = True
         request.data['is_admin'] = True
 
         email = request.data.get('email', None)
