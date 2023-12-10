@@ -72,6 +72,11 @@ MIDDLEWARE = [
 
 from datetime import timedelta
 
+
+# JWT_AUTH = {
+#     'JWT_PAYLOAD_HANDLER': 'genzApp.utils.jwt_payload_handler',
+# }
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=90),

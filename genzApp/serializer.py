@@ -20,6 +20,8 @@ class UserSerializer(ModelSerializer):
         return user
     
 
+    
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -31,9 +33,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
         token["name"] = user.name
         token["email"] = user.email
+        
+        token["profile_pic"] = user.profile_pic.url if user.profile_pic else None
 
         return token
-
 
 
 class UserProfileSerializer(ModelSerializer):
@@ -58,16 +61,16 @@ class AuthorSerializer(ModelSerializer):
         return user
     
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
 
-        token["is_user"] = user.is_user
-        token["is_admin"] = user.is_admin
-        token["is_author"] = user.is_author
+#         token["is_user"] = user.is_user
+#         token["is_admin"] = user.is_admin
+#         token["is_author"] = user.is_author
 
-        return token
+#         return token
 
 
 class AuthorsProfileSerializer(ModelSerializer):
@@ -90,16 +93,16 @@ class AdminSerializer(ModelSerializer):
         return user
     
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
+# class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+#     @classmethod
+#     def get_token(cls, user):
+#         token = super().get_token(user)
 
-        token["is_user"] = user.is_user
-        token["is_admin"] = user.is_admin
-        token["is_author"] = user.is_author
+#         token["is_user"] = user.is_user
+#         token["is_admin"] = user.is_admin
+#         token["is_author"] = user.is_author
 
-        return token
+#         return token
 
 class AdminProfileSerializer(ModelSerializer):
     class Meta:

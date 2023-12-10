@@ -48,6 +48,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_admin = models.BooleanField(default=False)
     is_user = models.BooleanField(default=False)
 
+    profile_pic = models.ImageField(default='default.png', blank=True, null=True, upload_to='profile_pics/')
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
