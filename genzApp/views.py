@@ -33,9 +33,9 @@ def enpoint(request):
         "Get and Update User Profile" : "api/userprofile/update",
 
 
-        "Getting User" : "api/author",
-        "Get, Update, Delete User" : "api/author/id",
-        "Get and Update User Profile" : "api/authorprofile/update",
+        "Getting Author" : "api/author",
+        "Get, Update, Delete Author" : "api/author/id",
+        "Get and Update Author Profile" : "api/authorprofile/update",
 
         # '===================== NEWS ======================== 
 
@@ -89,6 +89,7 @@ class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
 
     def users_update(self, serializer):
         instance = serializer.save()
+
 
 
     def users_destroy(self, instance):
