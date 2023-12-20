@@ -33,6 +33,7 @@ def enpoint(request):
 
         "Getting User" : "api/user",
         "Get, Update, Delete User" : "api/user/id",
+        "Get Profile" : "api/userprofile",
         "Get and Update User Profile" : "api/userprofile/update/id",
 
 
@@ -101,6 +102,7 @@ def confirm_email(request, user_id):
     return redirect('http://127.0.0.1:8000/api/token/')
 
 
+
 class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -114,7 +116,14 @@ class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     def users_destroy(self, instance):
         return super().perform_destroy(instance)
 
-class UserProfileGetUpdate(generics.RetrieveUpdateDestroyAPIView):
+
+
+class UserProfileGet(generics.ListAPIView):
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+
+
+class UserProfileGetUpdate(generics.RetrieveUpdateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     lookup_field = 'pk'

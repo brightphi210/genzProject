@@ -10,7 +10,9 @@ urlpatterns = [
     # ==================== User ==================================
     path('api/user', views.UserGetCreate.as_view(), name="api"),
     path('api/user/<str:pk>', views.UserGetUpdateDelete.as_view(), name="user_update"),
-    path('api/userprofile/update/<str:pk>', views.UserProfileGetUpdate.as_view(), name="user_profile"),
+
+    path('api/userprofiles', views.UserProfileGet.as_view(), name="user_profile"),
+    path('api/userprofile/update/<str:pk>', views.UserProfileGetUpdate.as_view(), name="user_profile_single"),
 
 
     # ==================== Email Verify ==================================
