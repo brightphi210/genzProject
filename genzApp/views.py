@@ -35,8 +35,15 @@ def enpoint(request):
         "Get, Update, Delete User" : "api/user/id",
         "Get Profile" : "api/userprofile",
         "Get and Update User Profile" : "api/userprofile/update/id",
+        'Change Password' : "api/change_password",
 
 
+        'Notifications' : 'api/notifications',
+
+
+
+
+    # '===================== Author ======================== 
         "Getting Author" : "api/author",
         "Get, Update, Delete Author" : "api/author/id",
         "Get and Update Author Profile" : "api/authorprofile/update/id",
@@ -99,7 +106,7 @@ def confirm_email(request, user_id):
     
     user.is_active= True
     user.save()
-    return redirect('http://127.0.0.1:8000/api/token/')
+    return redirect('https://comfy-platypus-5a2bd2.netlify.app/login')
 
 
 
@@ -130,6 +137,39 @@ class UserProfileGetUpdate(generics.RetrieveUpdateAPIView):
 
     def user_update(self, serializer):
         instance = serializer.save()
+
+
+# views.py
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    serializer_class = ChangePasswordSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            old_password = serializer.data.get("old_password")
+            new_password = serializer.data.get("new_password")
+
+            if not self.object.check_password(old_password):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+
+            self.object.set_password(new_password)
+            self.object.save()
+            return Response({"detail": "Password changed successfully."})
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class VerifyEmail(generics.GenericAPIView):
