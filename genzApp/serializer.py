@@ -5,6 +5,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
+from rest_framework import serializers
+
 
 
 class UserSerializer(ModelSerializer):
@@ -40,11 +42,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
 class UserProfileSerializer(ModelSerializer):
-    user = UserSerializer(read_only=True)
+    # user = UserSerializer()
 
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = ['user', 'profile_pic']
 
 
 
@@ -147,3 +149,14 @@ class SubscriptionPlanSerializer(ModelSerializer):
     class Meta:
         model = SubscriptionPlan
         fields = ['user', 'price', 'category', 'start_date', 'end_date', 'payment_status']
+
+
+
+class NotificationSerrializer(ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'
+
+
+class ActivationSerializer(serializers.Serializer):
+    token = serializers.CharField()

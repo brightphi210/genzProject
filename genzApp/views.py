@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from rest_framework import status
 
@@ -20,6 +21,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+
+from .signals import send_email_confirmation
 
 @api_view(["GET"])
 def enpoint(request):
@@ -62,12 +65,18 @@ class UserGetCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-        # request.data._mutable = True
+        request.data._mutable = True
         request.data['is_user'] = True
         email = request.data.get('email', None)
 
+
         # Check if a user with the given email already exists
         if email and User.objects.filter(email=email).exists():
+
+            user = User.objects.get(email=response.data['email'])
+
+            send_email_confirmation(user.email)
+
             return Response({'message': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
 
         response = super().create(request, *args, **kwargs)
@@ -80,6 +89,16 @@ class UserGetCreate(generics.ListCreateAPIView):
             error_message = {'message': 'User registration failed. Please check the provided data.'}
             response.data = error_message
             return response
+        
+
+from django.shortcuts import render, redirect, get_object_or_404
+
+def confirm_email(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    
+    user.is_active= True
+    user.save()
+    return redirect('http://127.0.0.1:8000/api/token/')
 
 
 class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
@@ -95,7 +114,7 @@ class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     def users_destroy(self, instance):
         return super().perform_destroy(instance)
 
-class UserProfileGetUpdate(generics.RetrieveUpdateAPIView):
+class UserProfileGetUpdate(generics.RetrieveUpdateDestroyAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     lookup_field = 'pk'
@@ -104,7 +123,9 @@ class UserProfileGetUpdate(generics.RetrieveUpdateAPIView):
         instance = serializer.save()
 
 
-
+class VerifyEmail(generics.GenericAPIView):
+    def get(self):
+        pass    
 
 
 # ========================= Authors ===========================
@@ -113,7 +134,7 @@ class AuthorGetCreate(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
 
     def create(self, request, *args, **kwargs):
-        # request.data._mutable = True
+        request.data._mutable = True
         request.data['is_author'] = True
 
         email = request.data.get('email', None)
@@ -307,6 +328,20 @@ class PremiumSubscriptionPlanViewSet(generics.ListCreateAPIView):
 
 
 
+class NotificationGetCreate(generics.ListCreateAPIView):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerrializer
+    
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'Notification was created successfully'})
+        else:
+            error_message = {'message': 'Notification was not created successfully'}
+            response.data = error_message
+            return response
+    
 
 
 

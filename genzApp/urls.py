@@ -13,6 +13,10 @@ urlpatterns = [
     path('api/userprofile/update/<str:pk>', views.UserProfileGetUpdate.as_view(), name="user_profile"),
 
 
+    # ==================== Email Verify ==================================
+    path('api/confirm-email/<int:user_id>/', views.confirm_email, name="confirm_email"),
+
+
     # ==================== Author ==================================
     path('api/author', views.AuthorGetCreate.as_view(), name="api"),
     path('api/author/<str:pk>', views.AuthorGetUpdateDelete.as_view(), name="user_update"),
@@ -27,6 +31,9 @@ urlpatterns = [
 
     # =========================== NEWS ==============================
     path('api/newsLetter', views.NewsLetterView.as_view(), name="newsLetter"),
+
+        # =========================== NEWS ==============================
+    path('api/notification', views.NotificationGetCreate.as_view(), name="notification"),
     
     path('api/news', views.NewsGet.as_view(), name="news"),
     path('api/stories', views.StoryGet.as_view(), name="stories"),

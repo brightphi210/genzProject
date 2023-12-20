@@ -38,7 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255, unique=True, blank=True, null=True)
     terms = models.BooleanField(default=False)
 
-    is_active = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
@@ -85,7 +85,8 @@ class UserProfile(models.Model):
         return self.user.email
     
 
-
+# class UpdatePassword(models.Model):
+#     oldPassword = models.CharField(m)
 
 
 # ====================== Admin ============================
@@ -196,3 +197,13 @@ class SubscriptionPlan(models.Model):
     def __str__(self):
         return self.category
 
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    message = models.TextField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+    
+    
