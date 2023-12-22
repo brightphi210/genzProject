@@ -199,7 +199,7 @@ USE_TZ = True
 
 import os
 
-BASE_URL = 'http://localhost:8000/'
+BASE_URL = 'https://gen-zsquare.com'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')

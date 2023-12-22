@@ -106,7 +106,7 @@ def confirm_email(request, user_id):
     
     user.is_active= True
     user.save()
-    return redirect('https://comfy-platypus-5a2bd2.netlify.app/login')
+    return redirect('https://snazzy-bublanina-2a471f.netlify.app/login')
 
 
 

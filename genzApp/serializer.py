@@ -38,6 +38,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         
         token["profile_pic"] = user.profile_pic.url if user.profile_pic else None
 
+        userProfile = UserProfile.objects.filter(user=user).first()
+        token['id'] = userProfile.id
+        # userProfile.id
+
+
         return token
 
 
