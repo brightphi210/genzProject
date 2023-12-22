@@ -79,7 +79,7 @@ class UserProfile(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=True, blank=True)
     profile_pic = models.ImageField(
-        upload_to='profile_pics/', default='default.png', blank=True, null=True)
+        upload_to='profile_pics/', default='profile_pics/default.png', blank=True, null=True)
 
     def __str__(self):
         return self.user.email
