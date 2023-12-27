@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework import generics
 from rest_framework import filters
 from rest_framework import viewsets
-
+from rest_framework.permissions import IsAuthenticated
 from .models import *
 
 from .serializer import *
@@ -128,15 +128,18 @@ class UserGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
 class UserProfileGet(generics.ListAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class UserProfileGetUpdate(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     lookup_field = 'pk'
 
     def user_update(self, serializer):
         instance = serializer.save()
+        
 
 
 # views.py
