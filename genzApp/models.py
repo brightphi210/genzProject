@@ -143,11 +143,13 @@ class News(models.Model):
 class Stories(models.Model):
     
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.CharField(max_length=225, blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
-    title = models.CharField(max_length=225, blank=True, null=True)
+    title = models.CharField(max_length=5000, blank=True, null=True)
     intro = models.TextField()
     body = models.TextField(blank=True, null=True)
+    storyBy = models.CharField(max_length=5000, blank=True, null=True)
+    imageSource = models.CharField(max_length=5000, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
@@ -157,11 +159,13 @@ class Stories(models.Model):
 class MagazineStories(models.Model):
     
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.CharField(max_length=5000, blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
-    title = models.CharField(max_length=225, blank=True, null=True)
+    title = models.CharField(max_length=5000, blank=True, null=True)
     intro = models.TextField()
     body = models.TextField(blank=True, null=True)
+    storyBy = models.CharField(max_length=5000, blank=True, null=True)
+    imageSource = models.CharField(max_length=5000, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
@@ -169,7 +173,7 @@ class MagazineStories(models.Model):
     
 
 class NewsLetter(models.Model):
-    email = models.EmailField(max_length=255, null=True, blank= True)
+    email = models.EmailField(max_length=5000, null=True, blank= True)
     subscribed = models.BooleanField(default=False)
     subscribed_date = models.DateTimeField(auto_now_add=True)
 

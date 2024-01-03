@@ -37,7 +37,7 @@ urlpatterns = [
     path('api/newsLetter', views.NewsLetterView.as_view(), name="newsLetter"),
 
         # =========================== NEWS ==============================
-    path('api/notification', views.NotificationGetCreate.as_view(), name="notification"),
+    path('api/notifications', views.NotificationGetCreate.as_view(), name="notification"),
     
     path('api/news', views.NewsGet.as_view(), name="news"),
     path('api/stories', views.StoryGet.as_view(), name="stories"),

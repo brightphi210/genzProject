@@ -39,7 +39,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token["profile_pic"] = user.profile_pic.url if user.profile_pic else None
 
         userProfile = UserProfile.objects.filter(user=user).first()
-        token['id'] = userProfile.id
+        token['id'] = userProfile.id if userProfile else None
+
+        # token['id'] = userProfile.id
         # userProfile.id
 
 
@@ -141,9 +143,22 @@ class NewSerializer(ModelSerializer):
 
 
 class StorySerializer(ModelSerializer):
+    # category = CategorySerializer()
     class Meta:
         model = Stories
-        fields = '__all__'
+        fields = "__all__"
+        # fields = [
+        #     'image', 
+        #     'title',
+        #     'intro',
+        #     'body',
+        #     'storyBy',
+        #     'imageSource',
+        #     'date_added',
+        #     'author',
+        #     'category'
+        # ]
+        
         # depth = 1
 
 class MagazineStorySerializer(ModelSerializer):
