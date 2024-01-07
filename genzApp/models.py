@@ -131,8 +131,8 @@ class News(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
-    title = models.CharField(max_length=225, blank=True, null=True)
-    intro = models.TextField()
+    title = models.TextField(blank=True, null=True)
+    intro = models.TextField(blank=True, null=True)
     body = models.TextField(blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
@@ -145,10 +145,10 @@ class Stories(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.CharField(max_length=225, blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
-    title = models.CharField(max_length=5000, blank=True, null=True)
-    intro = models.TextField()
+    title = models.TextField(blank=True, null=True)
+    intro = models.TextField(blank=True, null=True)
     body = models.TextField(blank=True, null=True)
-    storyBy = models.CharField(max_length=5000, blank=True, null=True)
+    storyBy = models.TextField(blank=True, null=True)
     imageSource = models.CharField(max_length=5000, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
@@ -161,10 +161,10 @@ class MagazineStories(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.CharField(max_length=5000, blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
-    title = models.CharField(max_length=5000, blank=True, null=True)
-    intro = models.TextField()
+    title = models.TextField(blank=True, null=True)
+    intro = models.TextField(blank=True, null=True)
     body = models.TextField(blank=True, null=True)
-    storyBy = models.CharField(max_length=5000, blank=True, null=True)
+    storyBy = models.TextField(blank=True, null=True)
     imageSource = models.CharField(max_length=5000, blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
@@ -203,6 +203,14 @@ class SubscriptionPlan(models.Model):
 
 
 class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255, blank=True, null=True)
+    message = models.TextField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.title
+    
+class NotificationRead(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255, blank=True, null=True)
     message = models.TextField(max_length=255, blank=True, null=True)

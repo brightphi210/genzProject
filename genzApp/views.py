@@ -39,6 +39,7 @@ def enpoint(request):
 
 
         'Notifications' : 'api/notifications',
+        'Notifications Read' : 'api/notificationsread',
 
 
 
@@ -383,6 +384,20 @@ class PremiumSubscriptionPlanViewSet(generics.ListCreateAPIView):
 class NotificationGetCreate(generics.ListCreateAPIView):
     queryset = Notification.objects.all()
     serializer_class = NotificationSerrializer
+    
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'Notification was created successfully'})
+        else:
+            error_message = {'message': 'Notification was not created successfully'}
+            response.data = error_message
+            return response
+        
+class NotificationReadGetCreate(generics.ListCreateAPIView):
+    queryset = NotificationRead.objects.all()
+    serializer_class = NotificationSerrializerRead
     
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)

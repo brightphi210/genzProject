@@ -143,23 +143,10 @@ class NewSerializer(ModelSerializer):
 
 
 class StorySerializer(ModelSerializer):
-    # category = CategorySerializer()
     class Meta:
         model = Stories
         fields = "__all__"
-        # fields = [
-        #     'image', 
-        #     'title',
-        #     'intro',
-        #     'body',
-        #     'storyBy',
-        #     'imageSource',
-        #     'date_added',
-        #     'author',
-        #     'category'
-        # ]
-        
-        # depth = 1
+
 
 class MagazineStorySerializer(ModelSerializer):
     class Meta:
@@ -182,6 +169,11 @@ class SubscriptionPlanSerializer(ModelSerializer):
 
 
 class NotificationSerrializer(ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'
+
+class NotificationSerrializerRead(ModelSerializer):
     class Meta:
         model = Notification
         fields = '__all__'
