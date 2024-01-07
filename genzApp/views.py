@@ -60,6 +60,7 @@ def enpoint(request):
         'Get and Create MagazineStories' : "api/magazineStories",
         'Get update, and delete a Magazine Story' : "api/magazineStory/update/id",
 
+        'Get and Create Magazines' : "api/magazines",
 
         # ===================== SUB ===============================
         "Monthly Subscription" : "api/subMonthly",

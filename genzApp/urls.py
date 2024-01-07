@@ -48,7 +48,7 @@ urlpatterns = [
     path('api/magazineStories', views.MagazineStoryGet.as_view(), name="stories"),
     path('api/story/magazineStory/<str:pk>', views.MagazineStoryGetUpdateDelete.as_view(), name="stories"),
 
-    path('api/magazines', views.MagazineStoryGet.as_view(), name="magazines"),
+    path('api/magazines', views.MagazineGetCreate.as_view(), name="magazines"),
     # path('api/magazine/updae<str:pk>', views.MagazineStoryGetUpdateDelete.as_view(), name="stories"),
 
 
