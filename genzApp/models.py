@@ -217,4 +217,9 @@ class NotificationRead(models.Model):
     def __str__(self):
         return self.title
     
+
+class Magazine(models.Model):
+    title = models.CharField(max_length=255, blank = True, null=True)
+    description = models.TextField()
+    pdf_file = models.FileField(upload_to='images/')
     

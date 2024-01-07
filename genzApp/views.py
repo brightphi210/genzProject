@@ -439,6 +439,20 @@ class NotificationReadGetCreate(generics.ListCreateAPIView):
     
 
 
+class MagazineGetCreate(generics.ListCreateAPIView):
+    queryset = Magazine.objects.all()
+    serializer_class = MagazineSerialiser
+    
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
+
+        if response.status_code == status.HTTP_201_CREATED:
+            return Response({'message': 'Magazine was created successfully'})
+        else:
+            error_message = {'message': 'Magazine was not created successfully'}
+            response.data = error_message
+            return response
+
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer

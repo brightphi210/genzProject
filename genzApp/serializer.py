@@ -181,3 +181,8 @@ class NotificationSerrializerRead(ModelSerializer):
 
 class ActivationSerializer(serializers.Serializer):
     token = serializers.CharField()
+
+class MagazineSerialiser(ModelSerializer):
+    class Meta:
+        model = Magazine
+        fields = "__all__"
