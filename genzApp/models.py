@@ -212,8 +212,7 @@ class Notification(models.Model):
     
 class NotificationRead(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255, blank=True, null=True)
-    message = models.TextField(max_length=255, blank=True, null=True)
+    notification = models.ForeignKey(Notification, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.title

@@ -56,7 +56,9 @@ def enpoint(request):
 
         # '===================== STORY ======================== 
         'Get and Create Stories' : "api/stories",
+        'Get, update, and delete a Story' : "api/story/update/id",
         'Get and Create MagazineStories' : "api/magazineStories",
+        'Get update, and delete a Magazine Story' : "api/magazineStory/update/id",
 
 
         # ===================== SUB ===============================
@@ -292,7 +294,7 @@ class NewsGet(generics.ListCreateAPIView):
     queryset = News.objects.all()
     serializer_class = NewSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'intro', 'body']
+    search_fields = ['title', 'intro', 'body', 'category']
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -308,11 +310,11 @@ class NewsGet(generics.ListCreateAPIView):
 
 
 class StoryGet(generics.ListCreateAPIView):
-
+    
     queryset = Stories.objects.all()
     serializer_class = StorySerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'intro', 'body']
+    search_fields = ['title', 'intro', 'body', 'category']
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -326,6 +328,19 @@ class StoryGet(generics.ListCreateAPIView):
             response.data = error_message
             return response
         
+        
+class StoryGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Stories.objects.all()
+    serializer_class = StorySerializer
+    lookup_field = 'pk'
+
+    def stories_update(self, serializer):
+        instance = serializer.save()
+
+    def stories_destroy(self, instance):
+        return super().perform_destroy(instance)
+
 
 
 class MagazineStoryGet(generics.ListCreateAPIView):
@@ -333,7 +348,7 @@ class MagazineStoryGet(generics.ListCreateAPIView):
     queryset = MagazineStories.objects.all()
     serializer_class = MagazineStorySerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['title', 'intro', 'body']
+    search_fields = ['title', 'intro', 'body', 'category']
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -347,6 +362,19 @@ class MagazineStoryGet(generics.ListCreateAPIView):
             response.data = error_message
             return response
 
+
+class MagazineStoryGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = MagazineStories.objects.all()
+    serializer_class = MagazineStorySerializer
+    lookup_field = 'pk'
+
+    def stories_update(self, serializer):
+        instance = serializer.save()
+
+    def stories_destroy(self, instance):
+        return super().perform_destroy(instance)
+    
 
 
 class NewsLetterView(generics.ListCreateAPIView):

@@ -41,8 +41,12 @@ urlpatterns = [
     path('api/notificationsread', views.NotificationReadGetCreate.as_view(), name="notificationread"),
     
     path('api/news', views.NewsGet.as_view(), name="news"),
+
     path('api/stories', views.StoryGet.as_view(), name="stories"),
+    path('api/story/update/<str:pk>', views.StoryGetUpdateDelete.as_view(), name="stories"),
+
     path('api/magazineStories', views.MagazineStoryGet.as_view(), name="stories"),
+    path('api/story/magazineStory/<str:pk>', views.MagazineStoryGetUpdateDelete.as_view(), name="stories"),
 
 
     # ======================== subsribe =================================

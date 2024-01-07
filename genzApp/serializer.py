@@ -175,7 +175,7 @@ class NotificationSerrializer(ModelSerializer):
 
 class NotificationSerrializerRead(ModelSerializer):
     class Meta:
-        model = Notification
+        model = NotificationRead
         fields = '__all__'
 
 
