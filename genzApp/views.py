@@ -77,7 +77,7 @@ class UserGetCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-        # request.data._mutable = True
+        request.data._mutable = True
         request.data['is_user'] = True
         email = request.data.get('email', None)
 
