@@ -286,9 +286,9 @@ class AdminProfileGetUpdate(generics.RetrieveUpdateAPIView):
 
 
 # =================== News =======================
-class MagazineGet(generics.ListAPIView):
-    # queryset = Magazine.objects.all()
-    pass
+# class MagazineGet(generics.ListAPIView):
+#     queryset = Magazine.objects.all()
+#     serializer_class = MagazineSerialiser
 
 
 class NewsGet(generics.ListCreateAPIView):

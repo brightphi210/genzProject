@@ -219,7 +219,13 @@ class NotificationRead(models.Model):
     
 
 class Magazine(models.Model):
-    title = models.CharField(max_length=255, blank = True, null=True)
+    adminUser = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True)
+    title_english = models.CharField(max_length=255, blank = True, null=True)
+    title_french = models.CharField(max_length=255, blank = True, null=True)
     description = models.TextField()
-    pdf_file = models.FileField(upload_to='images/')
+    pdf_file_english = models.FileField(upload_to='images/', blank=True, null=True)
+    pdf_file_french = models.FileField(upload_to='images/', blank=True, null=True)
+
+    def __str__(self):
+        return self.title_english
     
