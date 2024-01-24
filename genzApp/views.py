@@ -188,7 +188,7 @@ class VerifyEmail(generics.GenericAPIView):
 class AuthorGetCreate(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = AuthorSerializer
-
+    permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
         request.data._mutable = True
         request.data['is_author'] = True
@@ -203,10 +203,10 @@ class AuthorGetCreate(generics.ListCreateAPIView):
         
         # Check if the creation was successful
         if response.status_code == status.HTTP_201_CREATED:
-            return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
+            return Response({'message': 'Author created successfully'}, status=status.HTTP_201_CREATED)
         else:
             # Registration failed, customize the error message
-            error_message = {'message': 'User registration failed. Please check the provided data.'}
+            error_message = {'message': 'Author registration failed. Please check the provided data.'}
             response.data = error_message
             return response
 
