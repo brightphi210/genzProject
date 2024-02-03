@@ -50,7 +50,7 @@ def send_email_confirmation(sender, instance, created, **kwargs):
         confirmation_url = reverse('confirm_email', args=[instance.id])
         message = f'Click the link to confirm your email: {settings.BASE_URL}{confirmation_url}'
         from_email = settings.EMAIL_HOST_USER
-        recipient_list = [instance.email]
+        recipient_list = [instance.email]   
         
         send_mail(subject, message, from_email, recipient_list)
 

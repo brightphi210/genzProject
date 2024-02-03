@@ -15,6 +15,8 @@ urlpatterns = [
     path('api/userprofile/update/<str:pk>', views.UserProfileGetUpdate.as_view(), name="user_profile_single"),
 
     path('api/change_password', views.ChangePasswordView.as_view(), name="change_password"),
+    path('api/reset_password_email', views.ResetEmailView.as_view(), name="reset_password_email"),
+    path('api/reset_password', views.ResetPasswordView.as_view(), name="reset_password"),
 
 
     # ==================== Email Verify ==================================

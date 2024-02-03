@@ -56,14 +56,6 @@ class UserProfileSerializer(ModelSerializer):
         fields = ['user', 'id', 'profile_pic']
 
 
-# serializers.py
-from rest_framework import serializers
-
-class ChangePasswordSerializer(serializers.Serializer):
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
-    confirm_new_password = serializers.CharField(required=True)
-
 
 
 class AuthorSerializer(ModelSerializer):
@@ -186,3 +178,25 @@ class MagazineSerialiser(ModelSerializer):
     class Meta:
         model = Magazine
         fields = "__all__"
+
+
+
+# change Password
+from rest_framework import serializers
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True)
+
+
+class ResetPasswordEmailSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+
+# Reset Password 
+class ResetPasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True)
+

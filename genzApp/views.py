@@ -110,7 +110,7 @@ def confirm_email(request, user_id):
     
     user.is_active= True
     user.save()
-    return redirect('https://snazzy-bublanina-2a471f.netlify.app/login')
+    return redirect('https://genz-square.vercel.app/login')
 
 
 
@@ -155,7 +155,7 @@ from rest_framework.permissions import IsAuthenticated
 
 class ChangePasswordView(generics.UpdateAPIView):
     serializer_class = ChangePasswordSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -177,11 +177,56 @@ class ChangePasswordView(generics.UpdateAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+from django.core.mail import send_mail
+from rest_framework.views import APIView
+class ResetEmailView(APIView):
 
+    def post(self, request, *args, **kwargs, ):
+        serializer = ResetPasswordEmailSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
 
-class VerifyEmail(generics.GenericAPIView):
-    def get(self):
-        pass    
+            # Create and send the email
+            if email and User.objects.filter(email=email).exists():
+
+                link = 'http://127.0.0.1:8000/api/change_password'
+                subject = 'Confirm your email'
+                message = f'Click the link to confirm your email: {link}'
+                from_email = settings.EMAIL_HOST_USER
+                recipient_list = [email]
+            
+                send_mail(subject, message, from_email, recipient_list)
+
+                return Response({'detail': 'Email sent successfully'}, status=status.HTTP_200_OK)
+            
+            else:
+                return Response({'detail': 'Email was not sent successfully'}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ResetPasswordView(generics.UpdateAPIView):
+    serializer_class = ResetPasswordSerializer
+    # permission_classes = [IsAuthenticated]
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            old_password = serializer.data.get("old_password")
+            new_password = serializer.data.get("new_password")
+
+            if not self.object.check_password(old_password):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+
+            self.object.set_password(new_password)
+            self.object.save()
+            return Response({"detail": "Password changed successfully."})
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # ========================= Authors ===========================
@@ -457,3 +502,7 @@ class MagazineGetCreate(generics.ListCreateAPIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+
+
