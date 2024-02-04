@@ -49,14 +49,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_user = models.BooleanField(default=False)
 
     profile_pic = models.ImageField(default='default.png', blank=True, null=True, upload_to='profile_pics/')
-
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    class Meta:
+    class Meta: 
         verbose_name = 'user'
         verbose_name_plural = 'users'
 
@@ -225,13 +224,15 @@ class Magazine(models.Model):
     description = models.TextField()
     pdf_file_english = models.FileField(upload_to='images/', blank=True, null=True)
     pdf_file_french = models.FileField(upload_to='images/', blank=True, null=True)
+    image_french = models.ImageField(upload_to='images/', blank=True, null=True)
+    image_english = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
         return self.title_english
     
 
 
-# class PasswordReset(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE)
-#     token = models.CharField(max_length=255)
-#     created_at = models.DateTimeField(auto_now_add=True)
+class PasswordReset(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=4, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
