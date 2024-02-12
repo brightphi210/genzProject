@@ -222,3 +222,4 @@ EMAIL_HOST_USER = 'genzsquare12@gmail.com'
 EMAIL_HOST_PASSWORD = 'vlzitzextgnkxqrx'
 DEFAULT_FROM_USER = 'genzsquare12@gmail.com'
 SERVER_EMAIL =  'genzsquare12@gmail.com'
+

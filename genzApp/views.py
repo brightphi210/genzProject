@@ -64,6 +64,7 @@ def enpoint(request):
         'Get update, and delete a Magazine Story' : "api/magazineStory/update/id",
 
         'Get and Create Magazines' : "api/magazines",
+        'Get, Update and Magazines' : "api/magazine/update/id",
 
         # ===================== SUB ===============================
         "Monthly Subscription" : "api/subMonthly",
@@ -80,7 +81,7 @@ class UserGetCreate(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def create(self, request, *args, **kwargs):
-        request.data._mutable = True
+        # request.data._mutable = True
         request.data['is_user'] = True
         email = request.data.get('email', None)
 
@@ -187,24 +188,31 @@ import random
 
 
 
-class ResetEmailView(APIView):
+class ResetEmailView(generics.GenericAPIView):
+    
+    serializer_class = ResetPasswordEmailSerializer
 
     def post(self, request, *args, **kwargs, ):
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
         email = request.data.get('email')
         user = User.objects.get(email=email)
 
         code = random.randint(1000, 9999)
+        # code = 123
 
         PasswordReset.objects.update_or_create(user=user, defaults={'code': code})
 
 
-        if user:
+        if email:
             # Create and send the email
             if email and User.objects.filter(email=email).exists():
 
                 subject = 'Confirm your email'
                 message = f'This is your code: {code}'
-                from_email = settings.EMAIL_HOST_USER
+                from_email = 'smtp.gmail.com'
                 recipient_list = [email]
             
                 send_mail(subject, message, from_email, recipient_list)
@@ -213,6 +221,7 @@ class ResetEmailView(APIView):
             
             else:
                 return Response({'detail': 'Email was not sent successfully'}, status=status.HTTP_400_BAD_REQUEST)
+        
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -275,7 +284,7 @@ class AuthorGetCreate(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
     permission_classes = [IsAuthenticated]
     def create(self, request, *args, **kwargs):
-        request.data._mutable = True
+        # request.data._mutable = True
         request.data['is_author'] = True
 
         email = request.data.get('email', None)
@@ -289,6 +298,7 @@ class AuthorGetCreate(generics.ListCreateAPIView):
         # Check if the creation was successful
         if response.status_code == status.HTTP_201_CREATED:
             return Response({'message': 'Author created successfully'}, status=status.HTTP_201_CREATED)
+        
         else:
             # Registration failed, customize the error message
             error_message = {'message': 'Author registration failed. Please check the provided data.'}
@@ -336,6 +346,7 @@ class AdminGetCreate(generics.ListCreateAPIView):
         # Check if a user with the given email already exists
         if email and User.objects.filter(email=email).exists():
             return Response({'message': 'User with this email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+            
 
         response = super().create(request, *args, **kwargs)
         
@@ -539,6 +550,18 @@ class MagazineGetCreate(generics.ListCreateAPIView):
             response.data = error_message
             return response
 
+
+class MagazineGetUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Magazine.objects.all()
+    serializer_class = MagazineSerialiser
+    lookup_field = 'pk'
+
+    def stories_update(self, serializer):
+        instance = serializer.save()
+
+    def stories_destroy(self, instance):
+        return super().perform_destroy(instance)
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
